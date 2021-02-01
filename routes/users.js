@@ -13,7 +13,7 @@ router
   .put(updateUser);
 
 router
-  .route('/:vendorId')
+  .route('/:cognitoId')
   .get(getUser)
   .delete(deleteUser);
 

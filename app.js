@@ -1,8 +1,9 @@
 require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import errorHandler from './middleware/error';
-// import userRoutes from './routes/users';
+import userRoutes from './routes/users';
 
 const app = express();
 const PORT = process.env.PORT || 4200;
