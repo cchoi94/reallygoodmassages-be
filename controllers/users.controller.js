@@ -10,7 +10,7 @@ const findUser = async cognitoId => {
 
     return user ? user : undefined;
   } catch (err) {
-    next(err);
+    return err;
   }
 };
 
