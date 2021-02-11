@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { isEmail: true },
       },
+      favoriteMassages: {
+        type: DataTypes.ARRAY(DataTypes.TEXT),
+        allowNull: false,
+      },
     },
     {
       sequelize,
