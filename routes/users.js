@@ -7,14 +7,12 @@ import {
 } from '../controllers/users.controller';
 const router = express.Router();
 
-router
-  .route('/')
-  .post(createUser)
-  .put(updateUser);
+router.route('/').post(createUser);
 
 router
   .route('/:cognitoId')
   .get(getUser)
+  .put(updateUser)
   .delete(deleteUser);
 
 export default router;

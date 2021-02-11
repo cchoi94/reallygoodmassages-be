@@ -1,11 +1,12 @@
 import { User } from '../models';
 // Helper functions
-const findUser = async cognitoId => {
+export const findUser = async cognitoId => {
   try {
     const user = await User.findOne({
       where: {
         cognitoId,
       },
+      include: [{ all: true }],
     });
 
     return user ? user : undefined;
@@ -24,15 +25,11 @@ export const getUser = async (req, res, next) => {
     return next(new Error('user not found'));
   }
 
-  res.status(200).json({ sucess: true, data: user });
+  res.status(200).json(user);
 };
 
 export const createUser = async (req, res, next) => {
   const { cognitoId, username, email } = req.body;
-
-  if (await findUser(cognitoId)) {
-    return next(new Error('user already exists'));
-  }
 
   try {
     const newUser = User.build({
@@ -43,14 +40,14 @@ export const createUser = async (req, res, next) => {
 
     const savedUser = await newUser.save();
 
-    res.status(201).json({ sucess: true, data: savedUser });
+    res.status(201).json(savedUser);
   } catch (err) {
     next(err);
   }
 };
 
 export const updateUser = async (req, res, next) => {
-  const { cognitoId, username, email } = req.body;
+  const cognitoId = req.params.cognitoId;
 
   const user = await findUser(cognitoId);
 
@@ -59,19 +56,20 @@ export const updateUser = async (req, res, next) => {
   }
 
   try {
-    await User.update(
+    const updatedUser = await User.update(
       {
-        username,
-        email,
+        ...req.body,
       },
       {
         where: {
           id: user.id,
         },
+        returning: true,
+        plain: true,
       }
     );
 
-    res.status(200).json({ success: true, data: await findUser(cognitoId) });
+    res.status(200).json(updatedUser[1].dataValues);
   } catch (err) {
     next(err);
   }
@@ -92,7 +90,7 @@ export const deleteUser = async (req, res, next) => {
       },
     });
 
-    res.status(200).json({ success: true, data: {} });
+    res.status(200).json({});
   } catch (err) {
     next(err);
   }

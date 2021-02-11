@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.User.hasMany(models.Massage, {
+        as: 'favoriteMassages',
+        onDelete: 'CASCADE',
+      });
     }
   }
   User.init(
@@ -19,10 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: { isEmail: true },
-      },
-      favoriteMassages: {
-        type: DataTypes.ARRAY(DataTypes.TEXT),
-        allowNull: false,
       },
     },
     {
